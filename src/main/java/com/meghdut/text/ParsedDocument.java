@@ -11,7 +11,6 @@ public class ParsedDocument
 {
     private List<DocumentToken> documentTokens;
     private ConcurrentMap<String, Integer> tokenFrequencyMap;
-    private Set<String> uniqueTokens;
     private long id;
 
     public ParsedDocument(@NotNull List<DocumentToken> documentTokens, long uniqueId)
@@ -19,7 +18,6 @@ public class ParsedDocument
         this.id = uniqueId;
         this.documentTokens = documentTokens;
         this.tokenFrequencyMap = getTokenFrequencyMap(documentTokens);
-        this.uniqueTokens = tokenFrequencyMap.keySet();
     }
 
     @NotNull
@@ -31,7 +29,7 @@ public class ParsedDocument
                 .collect(Collectors.toConcurrentMap(w -> w, w -> 1, Integer::sum));
     }
 
-    private boolean isEmpty()
+    public boolean isEmpty()
     {
         return tokenFrequencyMap.isEmpty();
     }
@@ -48,11 +46,21 @@ public class ParsedDocument
 
     public Set<String> getUniqueTokens()
     {
-        return uniqueTokens;
+        return tokenFrequencyMap.keySet();
     }
 
     public long getId()
     {
         return id;
     }
+
+    public int getTokenFrequency(String word) {
+        if (!tokenFrequencyMap.containsKey(word)) {
+            return 0;
+        }
+
+        return tokenFrequencyMap.get(word);
+    }
+
+
 }
