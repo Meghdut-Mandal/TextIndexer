@@ -1,9 +1,11 @@
 package com.meghdut.text;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by brad on 6/7/15.
  */
-public class SearchResult
+public class SearchResult implements Comparable<SearchResult>
 {
 
     private double relevanceScore;
@@ -27,5 +29,15 @@ public class SearchResult
     public void setRelevanceScore(double relevanceScore)
     {
         this.relevanceScore = relevanceScore;
+    }
+
+    @Override
+    public int compareTo(@NotNull SearchResult o)
+    {
+        if (getRelevanceScore() <= o.getRelevanceScore()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

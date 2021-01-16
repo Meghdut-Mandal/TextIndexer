@@ -1,8 +1,10 @@
 package com.meghdut.text;
 
+import java.util.List;
+
 public interface TextSearchIndex
 {
-    SearchResultBatch search(String searchTerm, int maxResults);
+    List<SearchResult> search(String searchTerm, int maxResults);
 
     int numDocuments();
 
