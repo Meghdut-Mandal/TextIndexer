@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 public final class SearchIndexFactory
 {
 
-
-
-    public static TextSearchIndex buildIndex(Collection<Document> documents)
+    public static <T extends Document> TextSearchIndex buildIndex(Collection<T> documents)
     {
 
         final DocumentParser parser = new DefaultDocumentParser();

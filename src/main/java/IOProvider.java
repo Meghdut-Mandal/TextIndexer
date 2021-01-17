@@ -6,4 +6,7 @@ public interface IOProvider
 
     double readDouble();
 
+    void printLn(String obj);
+
+    void printLn(Object ob);
 }

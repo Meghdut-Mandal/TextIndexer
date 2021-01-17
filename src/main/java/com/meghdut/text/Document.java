@@ -22,7 +22,6 @@ public class Document
     }
 
 
-
     public String getText()
     {
         return text;
