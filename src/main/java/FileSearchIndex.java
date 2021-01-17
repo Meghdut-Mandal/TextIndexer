@@ -23,15 +23,25 @@ public class FileSearchIndex
         EMPTY_DOC = new FileDocument(Path.of(""), "", 34);
     }
 
-    final DocumentParser parser;
+    private final DocumentParser parser;
     private final TextSearchIndex searchIndex;
-    private AtomicInteger count;
-    private Map<Long, FileDocument> documentMap;
+    private final AtomicInteger count;
+    private final Map<Long, FileDocument> documentMap;
 
 
-    public FileSearchIndex(Path path) throws IOException
+    /**
+     * Create a Files Index with default word based Parser
+     * @param path the root path of the files
+     * @throws IOException
+     */
+    public FileSearchIndex(@NotNull Path path) throws IOException
     {
-        parser = new DefaultDocumentParser();
+        this(path, new DefaultDocumentParser());
+    }
+
+    public FileSearchIndex(@NotNull Path path, @NotNull DocumentParser parser) throws IOException
+    {
+        this.parser = parser;
         count = new AtomicInteger(0);
         documentMap = readFiles(path);
         searchIndex = SearchIndexFactory.buildIndex(documentMap.values());
@@ -67,5 +77,10 @@ public class FileSearchIndex
     {
         return searchIndex.search(searchTerm, maxResults).stream()
                 .collect(Collectors.toMap(Function.identity(), it -> documentMap.get(it.getUniqueIdentifier())));
+    }
+
+    public DocumentParser getParser()
+    {
+        return parser;
     }
 }
