@@ -5,8 +5,8 @@ import java.util.HashSet;
 public class ParsedDocumentCollection
 {
 
-    private String word;
-    private HashSet<ParsedDocument> uniqueDocuments;
+    private final String word;
+    private final HashSet<ParsedDocument> uniqueDocuments;
 
     public ParsedDocumentCollection(String word) {
         this.word = word;

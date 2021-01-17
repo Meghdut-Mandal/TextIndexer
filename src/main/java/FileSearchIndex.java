@@ -32,7 +32,7 @@ public class FileSearchIndex
     /**
      * Create a Files Index with default word based Parser
      * @param path the root path of the files
-     * @throws IOException
+     * @throws IOException if there's an issue with reading the files
      */
     public FileSearchIndex(@NotNull Path path) throws IOException
     {
@@ -73,9 +73,9 @@ public class FileSearchIndex
     }
 
 
-    public Map<SearchResult, FileDocument> search(String searchTerm, int maxResults)
+    public Map<SearchResult, FileDocument> search(String searchTerm)
     {
-        return searchIndex.search(searchTerm, maxResults).stream()
+        return searchIndex.search(searchTerm).stream()
                 .collect(Collectors.toMap(Function.identity(), it -> documentMap.get(it.getUniqueIdentifier())));
     }
 

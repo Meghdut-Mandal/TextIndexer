@@ -7,10 +7,12 @@ import java.util.List;
 
 /**
  * Collection of Parsed documents
+ * This can be extended to store some Meta-data about the documents
+ *
  */
 public class Corpus
 {
-    private List<ParsedDocument> parsedDocuments;
+    private final List<ParsedDocument> parsedDocuments;
 
     public Corpus(@NotNull List<ParsedDocument> documents)
     {

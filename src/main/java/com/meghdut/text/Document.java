@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Document
 {
-    private String text;
-    private Long id;
+    private final String text;
+    private final Long id;
 
     /**
      *

@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 public class ParsedDocument
 {
-    private List<DocumentToken> documentTokens;
-    private ConcurrentMap<String, Integer> tokenFrequencyMap;
-    private long id;
+    private final List<DocumentToken> documentTokens;
+    private final ConcurrentMap<String, Integer> tokenFrequencyMap;
+    private final long id;
 
     public ParsedDocument(@NotNull List<DocumentToken> documentTokens, long uniqueId)
     {

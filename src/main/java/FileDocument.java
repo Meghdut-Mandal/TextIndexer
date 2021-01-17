@@ -7,7 +7,7 @@ import java.nio.file.Path;
 public class FileDocument extends Document
 {
 
-    private Path location;
+    private final Path location;
 
     /**
      * @param text - The plain text for this Document

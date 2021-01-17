@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TextSearchIndex
 {
-    List<SearchResult> search(String searchTerm, int maxResults);
+    List<SearchResult> search(String searchTerm);
 
     int numDocuments();
 

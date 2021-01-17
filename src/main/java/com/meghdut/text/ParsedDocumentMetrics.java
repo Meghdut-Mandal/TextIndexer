@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class ParsedDocumentMetrics
 {
-    private Corpus corpus;
-    private ParsedDocument document;
-    private Map<String, ParsedDocumentCollection> termsToPostings;
+    private final Corpus corpus;
+    private final ParsedDocument document;
+    private final Map<String, ParsedDocumentCollection> termsToPostings;
 
     private Double magnitude;
-    private Map<String, Double> tfidfCache;
+    private final Map<String, Double> tfidfCache;
 
     public ParsedDocumentMetrics(Corpus corpus, ParsedDocument document,
                                  Map<String, ParsedDocumentCollection> termsToPostings)
@@ -37,12 +37,7 @@ public class ParsedDocumentMetrics
 
     public double getTfidf(String word)
     {
-        Double retVal = tfidfCache.get(word);
-        if (retVal == null) {
-            return 0;
-        }
-
-        return retVal;
+        return tfidfCache.getOrDefault(word,0.0);
     }
 
     public double getMagnitude()

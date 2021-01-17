@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 public class InvertedIndex implements TextSearchIndex
 {
 
-    private Corpus corpus;
+    private final Corpus corpus;
     private Map<String, ParsedDocumentCollection> termToPostings;
     private Map<ParsedDocument, ParsedDocumentMetrics> docToMetrics;
-    private DocumentParser searchTermParser;
+    private final DocumentParser searchTermParser;
 
     public InvertedIndex(Corpus corpus)
     {
         this.corpus = corpus;
-        init();
         searchTermParser = new DefaultDocumentParser();
+        init();
     }
 
     private void init()
@@ -57,6 +57,11 @@ public class InvertedIndex implements TextSearchIndex
         return termToPostings.keySet().size();
     }
 
+    /**
+     * This narrows down the search to Document which contains the words in the searchDoc
+     * @param searchDoc the document whose contents we are looking for
+     * @return a Set of Parsed Documents which are relevant to the searchDoc
+     */
     private Set<ParsedDocument> getRelevantDocuments(ParsedDocument searchDoc)
     {
         return searchDoc.getUniqueTokens().stream()
@@ -66,14 +71,19 @@ public class InvertedIndex implements TextSearchIndex
 
     }
 
+    /**
+     * @param searchTerm the raw text which will be used for searching
+     * @return a list of
+     */
     @Override
-    public List<SearchResult> search(String searchTerm, int maxResults)
+    public List<SearchResult> search(String searchTerm)
     {
 
         ParsedDocument searchDocument = searchTermParser.parse(new Document(searchTerm, System.currentTimeMillis()));
         Set<ParsedDocument> documentsToScanSet = getRelevantDocuments(searchDocument);
 
         if (searchDocument.isEmpty() || documentsToScanSet.isEmpty()) {
+            // No relevant documents found. Or the search Document docent contain any valid tokens
             return new ArrayList<>();
         }
         final ParsedDocumentMetrics searchDocumentMetrics = new ParsedDocumentMetrics(corpus, searchDocument, termToPostings);
@@ -98,18 +108,23 @@ public class InvertedIndex implements TextSearchIndex
     }
 
 
-    private double computeCosine(ParsedDocumentMetrics searchDocMetrics, ParsedDocument d2)
+    /**
+     * @param searchDocMetrics the document whose content we are searching
+     * @param targetDoc the target document
+     * @return the cosine similarity of the two documents
+     */
+    private double computeCosine(ParsedDocumentMetrics searchDocMetrics, ParsedDocument targetDoc)
     {
         double cosine;
 
         Set<String> wordSet = searchDocMetrics.getDocument().getUniqueTokens();
-        if (d2.getUniqueTokens().size() < wordSet.size()) {
-            wordSet = d2.getUniqueTokens();
+        if (targetDoc.getUniqueTokens().size() < wordSet.size()) {
+            wordSet = targetDoc.getUniqueTokens();
         }
 
         cosine = wordSet.stream()
                 .mapToDouble(word -> ((searchDocMetrics.getTfidf(word)) / searchDocMetrics.getMagnitude()) *
-                        ((docToMetrics.get(d2).getTfidf(word)) / docToMetrics.get(d2).getMagnitude()))
+                        ((docToMetrics.get(targetDoc).getTfidf(word)) / docToMetrics.get(targetDoc).getMagnitude()))
                 .filter(term -> !Double.isNaN(term)).sum();
 
         return cosine;

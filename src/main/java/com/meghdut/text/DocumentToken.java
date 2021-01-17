@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class DocumentToken
 {
-    private String token;
+    private final String token;
     private long type;
     private long pos;
 
