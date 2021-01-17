@@ -1,6 +1,7 @@
 package com.meghdut.text;
 
-import com.google.common.base.Objects;
+
+import java.util.Objects;
 
 public class DocumentToken
 {
@@ -19,8 +20,8 @@ public class DocumentToken
 
     /**
      * @param token the raw text of a token
-     * @param type the Type of
-     * @param pos
+     * @param type the type of token, useful for Lexers and Parsers  (Optional)
+     * @param pos the position of the
      */
     public DocumentToken(String token, long type, long pos)
     {
@@ -60,12 +61,12 @@ public class DocumentToken
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DocumentToken that = (DocumentToken) o;
-        return type == that.type && pos == that.pos && Objects.equal(token, that.token);
+        return type == that.type && pos == that.pos && token.equals(that.token);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(token, type, pos);
+        return Objects.hash(token, type, pos);
     }
 }

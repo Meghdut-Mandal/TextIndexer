@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A default Implementation of DocumentParser which splits by space
+ */
 public class DefaultDocumentParser implements DocumentParser
 {
     public DefaultDocumentParser()

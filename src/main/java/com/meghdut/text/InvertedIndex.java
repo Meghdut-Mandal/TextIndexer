@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,10 +29,10 @@ public class InvertedIndex implements TextSearchIndex
     {
         termToPostings = new HashMap<>();
         for (ParsedDocument document : corpus.getParsedDocuments()) {
-            for (DocumentToken documentToken : document.getDocumentTokens()) {
-                final String word = documentToken.getToken();
-                termToPostings.computeIfAbsent(word, ParsedDocumentCollection::new).addPosting(document);
-            }
+            document.getDocumentTokens().stream()
+                    .map(DocumentToken::getToken)
+                    .forEach(word -> termToPostings
+                            .computeIfAbsent(word, ParsedDocumentCollection::new).addPosting(document));
         }
 
 
@@ -60,15 +59,11 @@ public class InvertedIndex implements TextSearchIndex
 
     private Set<ParsedDocument> getRelevantDocuments(ParsedDocument searchDoc)
     {
+        return searchDoc.getUniqueTokens().stream()
+                .filter(word -> termToPostings.containsKey(word))
+                .flatMap(word -> termToPostings.get(word).getUniqueDocuments().stream())
+                .collect(Collectors.toSet());
 
-        Set<ParsedDocument> retVal = new HashSet<>();
-        for (String word : searchDoc.getUniqueTokens()) {
-            if (termToPostings.containsKey(word)) {
-                retVal.addAll(termToPostings.get(word).getUniqueDocuments());
-            }
-        }
-
-        return retVal;
     }
 
     @Override
@@ -79,18 +74,17 @@ public class InvertedIndex implements TextSearchIndex
         Set<ParsedDocument> documentsToScanSet = getRelevantDocuments(searchDocument);
 
         if (searchDocument.isEmpty() || documentsToScanSet.isEmpty()) {
-
             return new ArrayList<>();
         }
         final ParsedDocumentMetrics searchDocumentMetrics = new ParsedDocumentMetrics(corpus, searchDocument, termToPostings);
-        List<SearchResult> resultsP = documentsToScanSet
+
+
+        List<SearchResult> results = documentsToScanSet
                 .parallelStream()
                 .map(doc -> getSearchResult(searchDocumentMetrics, doc))
                 .sorted()
                 .collect(Collectors.toList());
-
-
-        return (resultsP);
+        return results;
     }
 
     @NotNull
@@ -114,17 +108,11 @@ public class InvertedIndex implements TextSearchIndex
         }
 
         cosine = wordSet.stream()
-                .mapToDouble(word ->
-                      ((searchDocMetrics.getTfidf(word)) / searchDocMetrics.getMagnitude()) *
-                ((docToMetrics.get(d2).getTfidf(word)) / docToMetrics.get(d2).getMagnitude()))
+                .mapToDouble(word -> ((searchDocMetrics.getTfidf(word)) / searchDocMetrics.getMagnitude()) *
+                        ((docToMetrics.get(d2).getTfidf(word)) / docToMetrics.get(d2).getMagnitude()))
                 .filter(term -> !Double.isNaN(term)).sum();
 
         return cosine;
     }
 
-
-    public Map<String, ParsedDocumentCollection> getTermToPostings()
-    {
-        return termToPostings;
-    }
 }

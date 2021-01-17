@@ -1,7 +1,9 @@
 package com.meghdut.text;
 
 import org.jetbrains.annotations.NotNull;
-
+/*
+A Parser for a Document
+ */
 public interface DocumentParser
 {
     /**

@@ -1,17 +1,19 @@
 package com.meghdut.text;
 
-import com.google.common.base.Preconditions;
 
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
+
+/**
+ * Collection of Parsed documents
+ */
 public class Corpus
 {
     private List<ParsedDocument> parsedDocuments;
 
-    public Corpus(List<ParsedDocument> documents)
+    public Corpus(@NotNull List<ParsedDocument> documents)
     {
-        Preconditions.checkNotNull(documents);
-        Preconditions.checkState(!documents.isEmpty());
         this.parsedDocuments = documents;
     }
 
