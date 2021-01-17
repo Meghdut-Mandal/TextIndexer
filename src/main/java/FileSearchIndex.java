@@ -42,6 +42,14 @@ public class FileSearchIndex
         this(path, new DefaultDocumentParser());
     }
 
+    public FileSearchIndex(@NotNull Path path, @NotNull IndexingProgressListener listener)
+            throws IOException
+    {
+        this(path, new DefaultDocumentParser());
+        this.listener = listener;
+    }
+
+
     public FileSearchIndex(@NotNull Path path, @NotNull DocumentParser parser) throws IOException
     {
         this.parser = parser;

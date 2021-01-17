@@ -1,17 +1,12 @@
-import com.meghdut.text.Document;
-import com.meghdut.text.SearchIndexFactory;
 import com.meghdut.text.SearchResult;
-import com.meghdut.text.TextSearchIndex;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Main implements IOProvider
+public class Main implements IOProvider,IndexingProgressListener
 {
     Scanner sc;
 
@@ -55,7 +50,7 @@ public class Main implements IOProvider
 
 
     }
-    
+
 
     @Override
     public String readLine()
@@ -85,5 +80,11 @@ public class Main implements IOProvider
     public void println(Object ob)
     {
         System.out.println(ob.toString());
+    }
+
+    @Override
+    public void update(FileDocument fileDocument, long currentCount)
+    {
+        System.out.println(" Total Files read="+currentCount+" File parsed="+fileDocument.getLocation().getFileName());
     }
 }
