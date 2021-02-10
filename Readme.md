@@ -1,4 +1,4 @@
-# Fast Index
+# Text Indexer
 A CLI app for indexing Text Files with tf-idf.
 
 ## Requirements
